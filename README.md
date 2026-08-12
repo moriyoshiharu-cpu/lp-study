@@ -146,6 +146,50 @@ git push
 
 Git ＝ ゲームのセーブ機能、GitHub ＝ セーブデータのクラウド保存、と考えると分かりやすいです。
 
+### STEP 4.5：SEOの基本ファイルを置く ✅
+
+公開URLが確定したので置けるようになったもの。
+
+| ファイル / タグ | 役割 | 状態 |
+|---|---|---|
+| `sitemap.xml` | ページ一覧をGoogleに提出する | ✅ 有効 |
+| `robots.txt` | クローラーへの指示書 | ⚠️ **配置上は機能せず**（下記） |
+| `canonical` | 正式URLを宣言し、評価の分散を防ぐ | ✅ 有効 |
+| `og:url` / `og:site_name` | SNSシェア時のカード表示 | ✅ 有効 |
+| FAQPage 構造化データ | 検索結果にFAQを展開表示させる | ✅ 有効 |
+
+#### ⚠️ robots.txt が効かない件（重要な学び）
+
+robots.txt は**ドメインのルート**に置かないとクローラーに読まれません。
+
+```
+クローラーが見に行く場所： https://<user>.github.io/robots.txt           ← 404
+実際に置いた場所　　　　： https://<user>.github.io/lp-study/robots.txt  ← 読まれない
+```
+
+GitHub Pages の「プロジェクトサイト」はサブディレクトリ配信のため、ルートを持てないのが原因です。
+ルートに置くには `<ユーザー名>.github.io` という名前のリポジトリを作る必要があります。
+
+**実害はありません**（robots.txt が無ければ「全ページ巡回可」が既定の動作）。
+ただし——
+
+> **ファイルを作った ≠ 機能している**
+>
+> 必ず公開URLにアクセスして検証する。これを怠ると「置いたので大丈夫です」という嘘の報告になります。
+
+#### 検証に使ったコマンド
+
+```powershell
+# ファイルが本当に見えるか
+Invoke-WebRequest -Uri "https://<user>.github.io/lp-study/sitemap.xml" -UseBasicParsing
+
+# タグが本当に入っているか（WebFetchやブラウザ表示では meta は見えない）
+$p = Invoke-WebRequest -Uri "https://<user>.github.io/lp-study/" -UseBasicParsing
+$p.Content -match 'rel="canonical" href="([^"]+)"'
+```
+
+---
+
 ### STEP 5：SEOを実際に体験する
 
 1. [Google Search Console](https://search.google.com/search-console) に STEP 4 のURLを登録
