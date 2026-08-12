@@ -101,15 +101,50 @@ git commit  = レジで会計する（レシート＝履歴が残る）
 **`git restore` が命綱**。これがあるから安心して壊せます。
 STEP 2で何をどう壊しても、必ず戻れます。
 
-### STEP 4：GitHubに上げて公開する
+### STEP 4：GitHubに上げて公開する ✅
 
-1. GitHubでアカウントを作る
-2. 新しいリポジトリを作る（例：`lp-study`）
-3. 表示されるコマンドをコピーして実行（`git remote add origin ...` → `git push`）
-4. リポジトリの Settings → Pages → Branch を `main` に設定して Save
-5. 数分待つと `https://ユーザー名.github.io/lp-study/` で公開される
+- **公開URL**： https://moriyoshiharu-cpu.github.io/lp-study/
+- **リポジトリ**： https://github.com/moriyoshiharu-cpu/lp-study
+
+#### 使ったコマンド（GitHub CLI）
+
+```bash
+gh auth login                # GitHubにログイン（初回のみ・ブラウザ認証）
+
+# リポジトリ作成 + remote登録 + push を一度に実行
+gh repo create lp-study --public --source=. --remote=origin --push
+
+# GitHub Pages を有効化（Web画面の Settings → Pages と同じこと）
+gh api --method POST "/repos/<ユーザー名>/lp-study/pages" -f "source[branch]=main" -f "source[path]=/"
+```
+
+Web画面から行う場合は、リポジトリの **Settings → Pages → Branch を `main`** にして Save。
+
+#### 以降、サイトを更新する流れ
+
+ファイルを書き換えたら、この3つを打つだけで公開サイトにも反映されます。
+
+```bash
+git add .
+git commit -m "何を変えたか"
+git push
+```
+
+反映まで1〜3分かかります。
 
 **ここが重要**：公開しないとSEOは学べません。URLがないとGoogleに登録できないからです。
+
+#### GitとGitHubの違い（混同しやすい）
+
+```
+【Git】                       【GitHub】
+自分のPCの中で動く道具          インターネット上の置き場所
+・変更履歴を記録する            ・Gitの履歴をアップして保管
+・いつでも過去に戻せる          ・他人と共同編集できる
+・オフラインで完結              ・無料でWeb公開できる（GitHub Pages）
+```
+
+Git ＝ ゲームのセーブ機能、GitHub ＝ セーブデータのクラウド保存、と考えると分かりやすいです。
 
 ### STEP 5：SEOを実際に体験する
 
