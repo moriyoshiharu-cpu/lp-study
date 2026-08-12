@@ -1,0 +1,1552 @@
+<!doctype html>
+<!--
+  ==========================================================================
+   LP学習用サンプル ／ 架空サービス「Funnel」
+  --------------------------------------------------------------------------
+   ■ このファイルの目的
+     LPの構造を「実物」で理解するための教材。
+     各ブロックの直前に【なぜこのブロックがあるか】をコメントで書いています。
+
+   ■ 注意
+     サービス名・数値・事例・料金はすべて【架空】です。
+     実在の企業・サービスとは関係ありません。
+
+   ■ 触り方
+     このファイルをダブルクリック → ブラウザで開く
+     文字を書き換えて保存 → ブラウザを再読み込み（F5）すると反映される
+  ==========================================================================
+-->
+<html lang="ja">
+<!--
+  【SEOポイント①】lang="ja"
+    このページが日本語であることを検索エンジンに伝えます。
+    地味ですが、検索結果の国・言語の出し分けに使われます。
+-->
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!--
+  【SEOポイント②】title タグ ← SEOで最重要のひとつ
+    ・Googleの検索結果に「青い見出し」として表示される文字
+    ・30文字前後に収める（長いと「…」で切られる）
+    ・狙うキーワードを前half に入れる
+    ・NJSSの実例：「入札情報速報サービス NJSS | 国内最大級の入札情報サイト」
+-->
+<title>Funnel｜BtoB SaaSのCVR改善・LP最適化サービス</title>
+
+<!--
+  【SEOポイント③】meta description
+    ・検索結果でtitleの下に出る説明文（120文字前後）
+    ・直接の順位要因ではないが「クリックされるか」を左右する
+    ・つまり順位は変わらなくても流入数は変わる
+-->
+<meta name="description" content="流入はあるのに商談が増えないBtoB SaaS向けのCVR改善サービス。LP・フォーム・登録フローを設計し直し、インサイドセールスの負担を減らしながら商談数を増やします。">
+
+<!--
+  【補足】OGP（SNSでシェアされた時のカード表示）
+    公開時は og:url と og:image を実際のURLに差し替える
+-->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Funnel｜BtoB SaaSのCVR改善・LP最適化サービス">
+<meta property="og:description" content="流入は足りている。詰まっているのは、その先だ。">
+
+<style>
+/* ==========================================================================
+   1. デザイントークン（色やサイズを変数にまとめる）
+   --------------------------------------------------------------------------
+   ここの数値を1箇所変えるだけで、ページ全体の印象が変わります。
+   まずは --brand の色コードを変えて遊んでみてください。
+   ========================================================================== */
+:root{
+  --bg:            #ffffff;
+  --bg-subtle:     #f6f8fb;
+  --bg-elevated:   #ffffff;
+  --ink:           #0f172a;   /* 本文の文字色 */
+  --ink-muted:     #52627a;   /* 補足文の文字色 */
+  --ink-faint:     #8494ab;
+  --line:          #e3e9f2;
+  --line-strong:   #cfd8e6;
+
+  --brand:         #3b5bfd;   /* ★ここを変えると全体の色が変わる */
+  --brand-deep:    #2039c4;
+  --brand-soft:    #eef2ff;
+  --accent:        #16c8b8;
+
+  --shadow-sm: 0 1px 2px rgba(15,23,42,.06), 0 1px 3px rgba(15,23,42,.05);
+  --shadow-md: 0 8px 24px -8px rgba(15,23,42,.14), 0 2px 6px rgba(15,23,42,.05);
+  --shadow-lg: 0 28px 60px -24px rgba(15,23,42,.28), 0 6px 18px rgba(15,23,42,.06);
+
+  --radius:    14px;
+  --radius-lg: 22px;
+  --maxw:      1120px;
+  --header-h:  68px;
+
+  --font: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN",
+          "Hiragino Sans", "BIZ UDPGothic", Meiryo, sans-serif;
+
+  /* ------------------------------------------------------------------
+     グラフ専用の色（データビジュアライゼーション用）
+     --------------------------------------------------------------------
+     ★重要★ この色は「なんとなく綺麗だから」で選んでいません。
+     色覚多様性（色の見え方が異なる方）でも区別できるかを
+     検証スクリプトで数値チェックして決めています。
+
+       系列1(青) ↔ 系列2(ティール) の識別距離 ΔE 28.8（基準は8以上）
+       通常視での識別距離                ΔE 32.6（基準は15以上）
+
+     グラフの色を変えるときは、必ず再検証してください。
+     「見た目で判断しない」がデータ可視化の鉄則です。
+     ------------------------------------------------------------------ */
+  --series-1: #3b5bfd;   /* 系列1：青 */
+  --series-2: #16c8b8;   /* 系列2：ティール */
+
+  /* ファネル用の単色ランプ（薄い→濃い で「順序」を表す） */
+  --ramp-1: #96a9ff;
+  --ramp-2: #6d86fd;
+  --ramp-3: #3b5bfd;
+  --ramp-4: #2039c4;
+
+  /* グラフの罫線・目盛りの色（データより目立たせない） */
+  --grid:     #e8ecf3;
+  --axis:     #cfd8e6;
+  --viz-face: #ffffff;   /* グラフが乗る面の色。すき間の色にも使う */
+
+  /* ファネルの帯の中に置く文字色（背景の明るさに合わせて反転させる） */
+  --fn-ink-1:#0f172a; --fn-ink-2:#0f172a; --fn-ink-3:#ffffff; --fn-ink-4:#ffffff;
+}
+
+/* ダークモードの端末で見たときの色（自動で切り替わります） */
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0b1120; --bg-subtle:#111a2e; --bg-elevated:#151f36;
+    --ink:#eef3fb; --ink-muted:#a9b6cc; --ink-faint:#7c8aa3;
+    --line:#22304c; --line-strong:#334364;
+    --brand:#6d86ff; --brand-deep:#4a63ee; --brand-soft:#1a2646;
+    --shadow-lg: 0 28px 60px -24px rgba(0,0,0,.7), 0 6px 18px rgba(0,0,0,.3);
+
+    /* グラフの色もダークモード用に選び直しています。
+       明るい色をそのまま暗い背景に置くと眩しくて読めないため、
+       「自動で反転」ではなく、暗い背景用に別途検証した値を使います。 */
+    --series-1:#6d86ff; --series-2:#0fa294;
+    --ramp-1:#c2ccff; --ramp-2:#96a9ff; --ramp-3:#6d86ff; --ramp-4:#4a63ee;
+    --grid:#22304c; --axis:#334364; --viz-face:#0b1120;
+    --fn-ink-1:#0b1120; --fn-ink-2:#0b1120; --fn-ink-3:#0b1120; --fn-ink-4:#ffffff;
+  }
+}
+
+/* ==========================================================================
+   2. ベース設定
+   ========================================================================== */
+*,*::before,*::after{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; scroll-padding-top: calc(var(--header-h) + 16px); }
+body{
+  margin:0; font-family:var(--font); color:var(--ink); background:var(--bg);
+  line-height:1.85; letter-spacing:.02em;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+}
+img{ max-width:100%; height:auto; display:block; }
+a{ color:inherit; text-decoration:none; }
+h1,h2,h3,h4{ line-height:1.45; margin:0; letter-spacing:.01em; font-weight:700; }
+p{ margin:0; }
+ul{ margin:0; padding:0; list-style:none; }
+
+.wrap{ width:min(100% - 40px, var(--maxw)); margin-inline:auto; }
+.section{ padding: clamp(72px, 10vw, 128px) 0; }
+.section--subtle{ background:var(--bg-subtle); }
+
+.eyebrow{
+  display:inline-block; font-size:.75rem; font-weight:700; letter-spacing:.18em;
+  color:var(--brand); text-transform:uppercase; margin-bottom:14px;
+}
+.sec-head{ text-align:center; max-width:800px; margin:0 auto clamp(40px,5vw,64px); }
+.sec-head h2{ font-size: clamp(1.6rem, 1.05rem + 2.1vw, 2.5rem); margin-bottom:16px; }
+.sec-head p{ color:var(--ink-muted); font-size:1rem; }
+.mark{ background:linear-gradient(transparent 62%, color-mix(in srgb, var(--accent) 38%, transparent) 62%); }
+
+/* ボタン */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:.5em;
+  padding:.95em 1.9em; border-radius:999px; font-weight:700; font-size:.95rem;
+  border:1px solid transparent; cursor:pointer;
+  transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease;
+  white-space:nowrap;
+}
+.btn:hover{ transform:translateY(-2px); }
+.btn--primary{
+  background:linear-gradient(135deg, var(--brand), var(--brand-deep)); color:#fff;
+  box-shadow:0 10px 24px -10px color-mix(in srgb, var(--brand) 70%, transparent);
+}
+.btn--ghost{
+  background:var(--bg-elevated); color:var(--ink);
+  border-color:var(--line-strong); box-shadow:var(--shadow-sm);
+}
+.btn--lg{ padding:1.1em 2.4em; font-size:1.02rem; }
+.btn--block{ width:100%; }
+
+/* ==========================================================================
+   3. ヘッダー
+   ========================================================================== */
+.header{
+  position:fixed; inset:0 0 auto 0; z-index:100; height:var(--header-h);
+  display:flex; align-items:center;
+  background:color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter:saturate(180%) blur(14px);
+  border-bottom:1px solid transparent;
+  transition:border-color .25s ease, box-shadow .25s ease;
+}
+.header.is-scrolled{ border-bottom-color:var(--line); box-shadow:var(--shadow-sm); }
+.header__inner{ display:flex; align-items:center; gap:28px; width:min(100% - 40px, var(--maxw)); margin-inline:auto; }
+.logo{ display:flex; align-items:center; gap:9px; font-weight:800; font-size:1.12rem; }
+.logo__mark{
+  width:28px; height:28px; border-radius:9px;
+  background:linear-gradient(135deg, var(--brand), var(--accent));
+  display:grid; place-items:center; color:#fff; font-size:.8rem; font-weight:800;
+}
+.nav{ margin-left:auto; display:flex; align-items:center; gap:26px; }
+.nav a{ font-size:.9rem; color:var(--ink-muted); font-weight:600; transition:color .18s ease; }
+.nav a:hover{ color:var(--ink); }
+.header .btn{ padding:.7em 1.4em; font-size:.86rem; }
+
+.burger{ display:none; margin-left:auto; width:44px; height:44px; border:0; background:none; cursor:pointer; position:relative; }
+.burger span{ position:absolute; left:11px; width:22px; height:2px; border-radius:2px; background:var(--ink); transition:transform .25s ease, opacity .2s ease; }
+.burger span:nth-child(1){ top:16px; }
+.burger span:nth-child(2){ top:22px; }
+.burger span:nth-child(3){ top:28px; }
+.burger[aria-expanded="true"] span:nth-child(1){ transform:translateY(6px) rotate(45deg); }
+.burger[aria-expanded="true"] span:nth-child(2){ opacity:0; }
+.burger[aria-expanded="true"] span:nth-child(3){ transform:translateY(-6px) rotate(-45deg); }
+
+@media (max-width:900px){
+  .burger{ display:block; }
+  .nav{
+    position:fixed; inset:var(--header-h) 0 auto 0;
+    flex-direction:column; align-items:stretch; gap:0;
+    background:var(--bg); border-bottom:1px solid var(--line);
+    padding:8px 20px 22px; transform:translateY(-12px); opacity:0; pointer-events:none;
+    transition:transform .22s ease, opacity .22s ease; box-shadow:var(--shadow-md);
+  }
+  .nav.is-open{ transform:none; opacity:1; pointer-events:auto; }
+  .nav a{ padding:14px 2px; border-bottom:1px solid var(--line); font-size:.98rem; color:var(--ink); }
+  .nav .btn{ margin-top:16px; padding:.95em 1.9em; }
+}
+
+/* ==========================================================================
+   4. ヒーロー（ファーストビュー）
+   ========================================================================== */
+.hero{ position:relative; padding: calc(var(--header-h) + clamp(56px,8vw,96px)) 0 clamp(64px,8vw,104px); overflow:hidden; }
+.hero::before{
+  content:""; position:absolute; z-index:-2; width:820px; height:820px; border-radius:50%;
+  top:-380px; right:-240px; filter:blur(12px);
+  background:radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--brand) 26%, transparent), transparent 62%);
+}
+.hero::after{
+  content:""; position:absolute; z-index:-2; width:620px; height:620px; border-radius:50%;
+  bottom:-320px; left:-220px; filter:blur(12px);
+  background:radial-gradient(circle at 60% 40%, color-mix(in srgb, var(--accent) 20%, transparent), transparent 62%);
+}
+.hero__grid{ display:grid; grid-template-columns: 1.06fr .94fr; gap: clamp(32px, 5vw, 68px); align-items:center; }
+.badge{
+  display:inline-flex; align-items:center; gap:8px; padding:.4em 1em .4em .5em;
+  border-radius:999px; background:var(--brand-soft); color:var(--brand-deep);
+  font-size:.78rem; font-weight:700; margin-bottom:24px;
+  border:1px solid color-mix(in srgb, var(--brand) 22%, transparent);
+}
+.badge b{ background:var(--brand); color:#fff; padding:.15em .7em; border-radius:999px; font-size:.72rem; }
+.hero h1{ font-size: clamp(1.9rem, 1.05rem + 3.7vw, 3.3rem); line-height:1.34; margin-bottom:24px; }
+.hero h1 .grad{
+  background:linear-gradient(100deg, var(--brand), var(--accent));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.hero__lead{ color:var(--ink-muted); font-size:1.05rem; margin-bottom:34px; max-width:34em; }
+.hero__cta{ display:flex; flex-wrap:wrap; gap:14px; margin-bottom:20px; }
+.hero__note{ font-size:.82rem; color:var(--ink-faint); }
+
+/* ヒーロー内のダッシュボード風モック（画像の代わり） */
+.mock{
+  border-radius:var(--radius-lg); background:var(--bg-elevated);
+  border:1px solid var(--line); box-shadow:var(--shadow-lg); overflow:hidden;
+  transform:perspective(1400px) rotateY(-7deg) rotateX(2deg);
+}
+.mock__bar{ display:flex; align-items:center; gap:7px; padding:12px 16px; border-bottom:1px solid var(--line); background:var(--bg-subtle); }
+.mock__dot{ width:10px; height:10px; border-radius:50%; background:var(--line-strong); }
+.mock__title{ margin-left:10px; font-size:.76rem; color:var(--ink-faint); font-weight:600; }
+.mock__body{ padding:22px; display:grid; gap:16px; }
+.mock__kpis{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+.kpi{ background:var(--bg-subtle); border:1px solid var(--line); border-radius:12px; padding:12px 14px; }
+.kpi span{ display:block; font-size:.68rem; color:var(--ink-faint); font-weight:700; letter-spacing:.06em; }
+.kpi strong{ font-size:1.3rem; }
+.kpi strong small{ font-size:.7rem; font-weight:700; color:var(--ink-muted); margin-left:2px; }
+
+/* --------------------------------------------------------------------------
+   ファネル図（漏斗）
+   【データの種類】ordinal＝「順序がある」データ
+     訪問 → フォーム到達 → 資料請求 → 商談 は、入れ替えたら意味が変わる。
+     こういうデータには "バラバラの色" ではなく "薄い→濃い の単色ランプ" を使う。
+     色そのものが「順番」を語るからです。
+   【すき間】2pxだけ空ける。枠線は引かない。
+     線を引くとインクが増えて重くなる。白い隙間で分けるのが定石。
+   -------------------------------------------------------------------------- */
+.funnel{ display:grid; gap:2px; }
+.funnel .fn{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:10px 14px; border-radius:4px; font-size:.74rem; font-weight:700;
+  margin-inline:auto; width:100%; transition:filter .15s ease; cursor:default;
+}
+.funnel .fn:hover{ filter:brightness(1.06); }
+.funnel .fn span{ font-weight:800; font-variant-numeric:tabular-nums; }
+/* 塗りの明るさに応じて文字色を変える（白のままだと薄い帯で読めなくなるため） */
+.funnel .fn:nth-child(1){ background:var(--ramp-1); color:var(--fn-ink-1); }
+.funnel .fn:nth-child(2){ background:var(--ramp-2); color:var(--fn-ink-2); width:76%; }
+.funnel .fn:nth-child(3){ background:var(--ramp-3); color:var(--fn-ink-3); width:52%; }
+.funnel .fn:nth-child(4){ background:var(--ramp-4); color:var(--fn-ink-4); width:34%; }
+
+@media (max-width:900px){
+  .hero__grid{ grid-template-columns:1fr; }
+  .mock{ transform:none; }
+  .hero__cta .btn{ flex:1 1 200px; }
+}
+
+/* ロゴ帯（信頼の担保） */
+.logos{ padding:34px 0; border-block:1px solid var(--line); background:var(--bg-subtle); }
+.logos p{ text-align:center; font-size:.78rem; color:var(--ink-faint); font-weight:700; letter-spacing:.1em; margin-bottom:18px; }
+.logos ul{ display:flex; flex-wrap:wrap; justify-content:center; gap:14px 40px; }
+.logos li{ font-weight:800; font-size:1.02rem; color:var(--ink-faint); opacity:.72; }
+
+/* ==========================================================================
+   5. カード類
+   ========================================================================== */
+.cards{ display:grid; gap:22px; }
+.cards--3{ grid-template-columns:repeat(3,1fr); }
+.cards--2{ grid-template-columns:repeat(2,1fr); }
+@media (max-width:880px){ .cards--3,.cards--2{ grid-template-columns:1fr; } }
+
+.card{
+  background:var(--bg-elevated); border:1px solid var(--line);
+  border-radius:var(--radius-lg); padding:32px 28px; box-shadow:var(--shadow-sm);
+  transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.card:hover{ transform:translateY(-4px); box-shadow:var(--shadow-md); border-color:var(--line-strong); }
+.card h3{ font-size:1.08rem; margin-bottom:10px; }
+.card p{ color:var(--ink-muted); font-size:.93rem; }
+
+.problem .card{ border-style:dashed; background:transparent; }
+.problem .card::before{ content:"“"; display:block; font-size:3rem; line-height:.6; color:var(--line-strong); margin-bottom:10px; }
+
+/* 特徴（左右交互） */
+.feature{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(28px,5vw,72px); align-items:center; padding:clamp(28px,4vw,48px) 0; }
+.feature:nth-child(even) .feature__media{ order:-1; }
+.feature__num{ font-size:.75rem; font-weight:800; letter-spacing:.16em; color:var(--brand); margin-bottom:12px; }
+.feature h3{ font-size:clamp(1.25rem,.95rem + 1.1vw,1.7rem); margin-bottom:16px; }
+.feature p{ color:var(--ink-muted); margin-bottom:20px; }
+.checks li{ position:relative; padding-left:30px; margin-bottom:10px; font-size:.93rem; }
+.checks li::before{
+  content:""; position:absolute; left:0; top:.5em; width:19px; height:19px; border-radius:50%;
+  background:var(--brand-soft); box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--brand) 35%, transparent);
+}
+.checks li::after{
+  content:""; position:absolute; left:6px; top:.82em; width:7px; height:4px;
+  border-left:2px solid var(--brand); border-bottom:2px solid var(--brand); transform:rotate(-45deg);
+}
+.feature__media{
+  border-radius:var(--radius-lg); border:1px solid var(--line);
+  background:linear-gradient(150deg, var(--bg-subtle), var(--bg-elevated));
+  box-shadow:var(--shadow-md); padding:26px; min-height:230px;
+  display:grid; align-content:center; gap:12px;
+}
+@media (max-width:880px){
+  .feature{ grid-template-columns:1fr; }
+  .feature:nth-child(even) .feature__media{ order:0; }
+}
+
+/* 比較表（ビフォーアフター） */
+.compare{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.compare > div{ border-radius:var(--radius-lg); padding:26px 24px; border:1px solid var(--line); }
+.compare .before{ background:var(--bg-subtle); }
+.compare .after{ background:var(--bg-elevated); box-shadow:var(--shadow-md), 0 0 0 2px var(--brand); }
+.compare h4{ font-size:.82rem; letter-spacing:.1em; margin-bottom:16px; color:var(--ink-faint); }
+.compare .after h4{ color:var(--brand); }
+.compare dl{ margin:0; display:grid; gap:12px; }
+.compare .r{ display:flex; justify-content:space-between; gap:12px; font-size:.9rem; padding-bottom:10px; border-bottom:1px dashed var(--line); }
+.compare .r b{ font-weight:800; }
+.compare .after .r b{ color:var(--brand); }
+@media (max-width:720px){ .compare{ grid-template-columns:1fr; } }
+
+/* 数値 */
+.stats{ display:grid; grid-template-columns:repeat(4,1fr); gap:20px; text-align:center; }
+.stats div{ padding:20px 10px; }
+.stats strong{
+  display:block; font-size:clamp(1.9rem,1.3rem + 2vw,2.8rem); line-height:1.2; letter-spacing:-.02em;
+  background:linear-gradient(120deg, var(--brand), var(--accent));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.stats span{ font-size:.85rem; color:var(--ink-muted); font-weight:600; }
+@media (max-width:720px){ .stats{ grid-template-columns:repeat(2,1fr); } }
+
+/* ステップ */
+.steps{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+.step{ text-align:center; padding:0 8px; }
+.step__num{
+  width:56px; height:56px; margin:0 auto 18px; border-radius:50%;
+  display:grid; place-items:center; color:#fff; font-weight:800; font-size:1.1rem;
+  background:linear-gradient(135deg, var(--brand), var(--brand-deep));
+  box-shadow:0 10px 22px -10px color-mix(in srgb, var(--brand) 75%, transparent);
+}
+.step h3{ font-size:1.05rem; margin-bottom:8px; }
+.step p{ color:var(--ink-muted); font-size:.9rem; }
+.step__term{ display:inline-block; margin-top:10px; font-size:.74rem; font-weight:700; color:var(--brand); }
+@media (max-width:880px){ .steps{ grid-template-columns:1fr; gap:36px; } }
+
+/* 事例 */
+.case{
+  background:var(--bg-elevated); border:1px solid var(--line); border-radius:var(--radius-lg);
+  padding:30px 28px; box-shadow:var(--shadow-sm); display:flex; flex-direction:column; gap:16px;
+}
+.case__quote{ font-size:1rem; line-height:1.9; font-weight:600; }
+.case__result{ display:flex; gap:22px; padding:14px 16px; border-radius:12px; background:var(--bg-subtle); border:1px solid var(--line); }
+.case__result div span{ display:block; font-size:.7rem; color:var(--ink-faint); font-weight:700; }
+.case__result div strong{ font-size:1.15rem; color:var(--brand); }
+.case__who{ display:flex; align-items:center; gap:12px; margin-top:auto; }
+.avatar{
+  width:42px; height:42px; border-radius:50%; flex:none; color:#fff; font-weight:800; font-size:.9rem;
+  background:linear-gradient(135deg, var(--brand), var(--accent)); display:grid; place-items:center;
+}
+.case__who p{ font-size:.82rem; color:var(--ink-muted); line-height:1.6; }
+.case__who b{ display:block; color:var(--ink); font-size:.9rem; }
+
+/* 料金 */
+.plans{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; align-items:start; }
+.plan{
+  background:var(--bg-elevated); border:1px solid var(--line); border-radius:var(--radius-lg);
+  padding:34px 28px; box-shadow:var(--shadow-sm); display:flex; flex-direction:column; gap:18px;
+}
+.plan--featured{ border-color:transparent; box-shadow:var(--shadow-lg), 0 0 0 2px var(--brand); position:relative; }
+.plan--featured::before{
+  content:"おすすめ"; position:absolute; top:-13px; left:50%; transform:translateX(-50%);
+  background:linear-gradient(135deg, var(--brand), var(--brand-deep)); color:#fff;
+  font-size:.72rem; font-weight:800; padding:.35em 1.1em; border-radius:999px; white-space:nowrap;
+}
+.plan h3{ font-size:1.05rem; }
+.plan__price{ display:flex; align-items:baseline; gap:4px; }
+.plan__price strong{ font-size:2.1rem; letter-spacing:-.02em; }
+.plan__price span{ font-size:.82rem; color:var(--ink-muted); font-weight:600; }
+.plan__desc{ font-size:.86rem; color:var(--ink-muted); }
+.plan ul{ display:grid; gap:9px; font-size:.88rem; }
+.plan li{ position:relative; padding-left:24px; color:var(--ink-muted); }
+.plan li::before{ content:"✓"; position:absolute; left:0; color:var(--brand); font-weight:800; }
+@media (max-width:880px){ .plans{ grid-template-columns:1fr; } .plan--featured{ order:-1; } }
+
+/* FAQ */
+.faq{ max-width:820px; margin-inline:auto; display:grid; gap:12px; }
+.faq details{ background:var(--bg-elevated); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; transition:border-color .2s ease; }
+.faq details[open]{ border-color:var(--brand); box-shadow:var(--shadow-sm); }
+.faq summary{ list-style:none; cursor:pointer; padding:20px 56px 20px 22px; font-weight:700; font-size:.98rem; position:relative; }
+.faq summary::-webkit-details-marker{ display:none; }
+.faq summary::after{
+  content:""; position:absolute; right:24px; top:26px; width:9px; height:9px;
+  border-right:2px solid var(--ink-faint); border-bottom:2px solid var(--ink-faint);
+  transform:rotate(45deg); transition:transform .22s ease;
+}
+.faq details[open] summary::after{ transform:rotate(-135deg); }
+.faq p{ padding:0 22px 22px; color:var(--ink-muted); font-size:.92rem; }
+
+/* ==========================================================================
+   6. 最終CTA / フォーム
+   ========================================================================== */
+.cta{ position:relative; overflow:hidden; background:linear-gradient(135deg, #16204a, #0d1330 60%, #0a2c45); color:#fff; }
+.cta::before{
+  content:""; position:absolute; inset:auto -10% -60% -10%; height:420px;
+  background:radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--brand) 40%, transparent), transparent 65%);
+}
+.cta__grid{ position:relative; display:grid; grid-template-columns:1fr .92fr; gap:clamp(32px,5vw,64px); align-items:center; }
+.cta h2{ font-size:clamp(1.7rem,1.1rem + 2.4vw,2.5rem); margin-bottom:18px; }
+.cta p{ color:#c3cee4; margin-bottom:26px; }
+.cta .checks li{ color:#e8eefb; }
+.cta .checks li::before{ background:rgba(255,255,255,.12); box-shadow:inset 0 0 0 1px rgba(255,255,255,.3); }
+.cta .checks li::after{ border-color:#fff; }
+
+.form{
+  background:#fff; color:var(--ink); border-radius:var(--radius-lg);
+  padding:clamp(26px,3vw,34px); box-shadow:var(--shadow-lg); display:grid; gap:14px;
+}
+.form h3{ font-size:1.15rem; }
+.form__note{ font-size:.8rem; color:var(--ink-faint); }
+.field{ display:grid; gap:6px; }
+.field label{ font-size:.82rem; font-weight:700; }
+.field label i{ color:#e0455f; font-style:normal; font-size:.72rem; margin-left:4px; }
+.field input, .field select, .field textarea{
+  font-family:inherit; font-size:.94rem; color:var(--ink); background:#fff; width:100%;
+  padding:.8em .9em; border:1px solid var(--line-strong); border-radius:10px;
+  transition:border-color .18s ease, box-shadow .18s ease;
+}
+.field input:focus, .field select:focus, .field textarea:focus{
+  outline:none; border-color:var(--brand);
+  box-shadow:0 0 0 3px color-mix(in srgb, var(--brand) 18%, transparent);
+}
+.field textarea{ resize:vertical; min-height:80px; }
+.form__privacy{ font-size:.78rem; color:var(--ink-muted); }
+.form__privacy a{ color:var(--brand); text-decoration:underline; }
+.form__done{
+  display:none; text-align:center; padding:18px; background:var(--brand-soft);
+  border-radius:12px; color:var(--brand-deep); font-weight:700; font-size:.92rem;
+}
+@media (max-width:900px){ .cta__grid{ grid-template-columns:1fr; } }
+
+/* ==========================================================================
+   7. フッター / 追従CTA
+   ========================================================================== */
+.footer{ background:var(--bg-subtle); border-top:1px solid var(--line); padding:56px 0 28px; }
+.footer__grid{ display:grid; grid-template-columns:1.4fr repeat(3,1fr); gap:32px; margin-bottom:40px; }
+.footer__grid p{ font-size:.85rem; color:var(--ink-muted); margin-top:14px; max-width:26em; }
+.footer h4{ font-size:.82rem; letter-spacing:.08em; margin-bottom:14px; }
+.footer li{ margin-bottom:9px; }
+.footer li a{ font-size:.85rem; color:var(--ink-muted); transition:color .18s ease; }
+.footer li a:hover{ color:var(--brand); }
+.footer__bottom{
+  border-top:1px solid var(--line); padding-top:22px; display:flex; flex-wrap:wrap;
+  gap:12px; justify-content:space-between; font-size:.78rem; color:var(--ink-faint);
+}
+@media (max-width:880px){ .footer__grid{ grid-template-columns:1fr 1fr; } }
+
+.sticky-cta{
+  position:fixed; inset:auto 0 0 0; z-index:90;
+  padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+  background:color-mix(in srgb, var(--bg) 90%, transparent); backdrop-filter:blur(12px);
+  border-top:1px solid var(--line); display:none; gap:10px;
+  transform:translateY(110%); transition:transform .3s ease;
+}
+.sticky-cta.is-visible{ transform:none; }
+.sticky-cta .btn{ flex:1; padding:.85em 1em; font-size:.9rem; }
+@media (max-width:720px){ .sticky-cta{ display:flex; } body{ padding-bottom:74px; } }
+
+/* ==========================================================================
+   8. グラフ（データビジュアライゼーション）
+   --------------------------------------------------------------------------
+   グラフを作るときの原則を、このCSSで実装しています。
+
+   ① データより目立つものを置かない
+      → 目盛り線・軸は「背景から1段階だけ濃い」ヘアライン。点線は使わない。
+   ② 数字を全部書かない
+      → 端の値だけ直接ラベル。残りは軸とツールチップに任せる。
+   ③ 文字にデータの色を使わない
+      → 色は棒や線が持つ。文字は常に読みやすい黒/グレー。
+   ④ 色だけに意味を持たせない
+      → 凡例＋直接ラベル＋表を必ず用意する（色が見分けられない人のため）
+   ========================================================================== */
+.chart{
+  background:var(--bg-elevated); border:1px solid var(--line);
+  border-radius:var(--radius-lg); padding:26px 24px 18px; box-shadow:var(--shadow-sm);
+}
+.chart__title{ font-size:1rem; font-weight:700; margin-bottom:5px; }
+.chart__sub{ font-size:.82rem; color:var(--ink-muted); margin-bottom:16px; }
+
+/* 凡例：系列が2つ以上あるときは必ず置く（色だけに頼らせないため） */
+.legend{ display:flex; flex-wrap:wrap; gap:8px 20px; margin-bottom:12px; font-size:.78rem; color:var(--ink-muted); font-weight:600; }
+.legend i{ width:16px; height:3px; border-radius:2px; display:inline-block; margin-right:7px; vertical-align:middle; }
+
+.chart svg{ width:100%; height:auto; display:block; overflow:visible; }
+.gridline{ stroke:var(--grid); stroke-width:1; }        /* 実線のヘアライン。点線は使わない */
+.axisline{ stroke:var(--axis); stroke-width:1; }
+.tick{ font-size:10px; fill:var(--ink-faint); font-family:var(--font); font-variant-numeric:tabular-nums; }
+.lbl{ font-size:11px; fill:var(--ink-muted); font-family:var(--font); font-weight:600; }
+.val{ font-size:12px; fill:var(--ink); font-family:var(--font); font-weight:700; }
+.hit{ fill:transparent; cursor:pointer; }               /* 当たり判定は見た目より大きく取る */
+
+/* ダンベル図（BEFORE → AFTER を1本の線で結ぶ） */
+.dumbbells{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+@media (max-width:640px){ .dumbbells{ grid-template-columns:1fr; } }
+.db{ background:var(--bg-subtle); border:1px solid var(--line); border-radius:12px; padding:16px 14px; }
+.db h5{ font-size:.78rem; margin:0 0 10px; color:var(--ink-muted); font-weight:700; }
+
+/* 表ビュー：グラフが読めない場合の代替。アクセシビリティ上ほぼ必須 */
+.table-view{ margin-top:14px; }
+.table-view summary{ cursor:pointer; font-size:.76rem; color:var(--ink-faint); font-weight:600; list-style:none; }
+.table-view summary::-webkit-details-marker{ display:none; }
+.table-view summary::before{ content:"▸ "; }
+.table-view[open] summary::before{ content:"▾ "; }
+.table-view table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:.8rem; font-variant-numeric:tabular-nums; }
+.table-view th, .table-view td{ padding:7px 10px; border-bottom:1px solid var(--line); text-align:right; }
+.table-view th:first-child, .table-view td:first-child{ text-align:left; }
+.table-view thead th{ color:var(--ink-faint); font-size:.72rem; font-weight:700; }
+
+/* ツールチップ（マウスを乗せると値が出る） */
+.viz-tip{
+  position:fixed; z-index:200; pointer-events:none;
+  background:var(--ink); color:var(--bg); padding:8px 12px; border-radius:9px;
+  font-size:.76rem; font-weight:600; line-height:1.55; white-space:nowrap;
+  opacity:0; transform:translateY(4px); transition:opacity .12s ease, transform .12s ease;
+  box-shadow:var(--shadow-md);
+}
+.viz-tip.is-on{ opacity:1; transform:none; }
+
+/* スクロールで浮かび上がる演出 */
+.reveal{ opacity:0; transform:translateY(22px); transition:opacity .7s ease, transform .7s cubic-bezier(.22,1,.36,1); }
+.reveal.is-in{ opacity:1; transform:none; }
+
+/* 「動きを減らす」設定の人には演出を止める（アクセシビリティ配慮） */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{ animation:none !important; transition:none !important; }
+  .reveal{ opacity:1; transform:none; }
+  html{ scroll-behavior:auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- ==========================================================================
+     ヘッダー
+     【なぜあるか】
+       ・ロゴ ＝ 「どこの誰か」を明示して安心させる
+       ・右端のCTAボタン ＝ どこまでスクロールしても申込に戻れるようにする
+     【LPの流派】
+       純粋な広告用LPでは、ナビゲーション自体を置かないこともある（離脱防止）。
+       今回は「検索からも来る想定」なので、ナビを残しています。
+     ========================================================================== -->
+<header class="header" id="header">
+  <div class="header__inner">
+    <a class="logo" href="#top"><span class="logo__mark">F</span>Funnel</a>
+
+    <button class="burger" id="burger" aria-label="メニューを開く" aria-expanded="false" aria-controls="nav">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="nav" id="nav">
+      <a href="#problem">課題</a>
+      <a href="#feature">できること</a>
+      <a href="#flow">進め方</a>
+      <a href="#case">事例</a>
+      <a href="#price">料金</a>
+      <a href="#faq">FAQ</a>
+      <a class="btn btn--primary" href="#contact">無料診断を申し込む</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ==========================================================================
+     ① ファーストビュー（ヒーロー）
+     【なぜあるか】ここで7割が決まる。3秒で「自分に関係あるか」を判断される。
+     【必須の4点セット】
+       1. キャッチコピー（誰の何を解決するか）
+       2. 補足説明（1〜3行）
+       3. CTAボタン
+       4. 視覚要素（画像 or 図）
+     【SEOポイント④】h1タグ
+       ページ内で1つだけ。ページの主題を宣言するタグ。
+       ここでは装飾より「何のページか」が伝わることを優先します。
+     ========================================================================== -->
+<section class="hero">
+  <div class="wrap hero__grid">
+    <div>
+      <!-- バッジ：数字や限定性を最初に置くと目に留まりやすい -->
+      <span class="badge"><b>無料</b>LP・フォーム診断を実施中（先着10社）</span>
+
+      <h1>流入は足りている。<br><span class="grad">詰まっているのは、その先だ。</span></h1>
+
+      <p class="hero__lead">
+        Funnelは、BtoB SaaS のLP・フォーム・登録フローを設計し直し、
+        「リードは増えたのに商談が増えない」状態を解消するCVR改善サービスです。
+        インサイドセールスの架電工数を減らしながら、商談数を増やします。
+      </p>
+
+      <!-- CTAは2つまで。1つは「今すぐ」、もう1つは「まだ迷っている人」向け -->
+      <div class="hero__cta">
+        <a class="btn btn--primary btn--lg" href="#contact">無料でLP診断を受ける</a>
+        <a class="btn btn--ghost btn--lg" href="#feature">できることを見る</a>
+      </div>
+      <p class="hero__note">※ 所要3分。診断結果はレポートでお渡しします。</p>
+    </div>
+
+    <!--
+      視覚要素：本来は製品スクリーンショットを置く場所。
+      ここではCSSだけでダッシュボード風の図を作っています。
+      （画像がないぶん表示が速い＝SEOにもプラス）
+    -->
+    <div class="mock" aria-hidden="true">
+      <div class="mock__bar">
+        <span class="mock__dot"></span><span class="mock__dot"></span><span class="mock__dot"></span>
+        <span class="mock__title">Funnel — ファネル分析</span>
+      </div>
+      <div class="mock__body">
+        <div class="mock__kpis">
+          <div class="kpi"><span>CVR</span><strong>4.8<small>%</small></strong></div>
+          <div class="kpi"><span>商談化率</span><strong>32<small>%</small></strong></div>
+          <div class="kpi"><span>IS架電数</span><strong>-71<small>%</small></strong></div>
+        </div>
+        <!-- ファネル図：上から下へ、どこで何人が落ちているかを幅で示す -->
+        <div class="funnel">
+          <div class="fn">サイト訪問 <span>12,400</span></div>
+          <div class="fn">フォーム到達 <span>2,180</span></div>
+          <div class="fn">資料請求 <span>596</span></div>
+          <div class="fn">商談化 <span>190</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     ロゴ帯（社会的証明）
+     【なぜあるか】「他社も使っている」＝安心。人は多数派の選択に安心する。
+     【実運用の注意】掲載許諾を得ていない企業名やロゴは絶対に載せない。
+     ========================================================================== -->
+<div class="logos">
+  <div class="wrap">
+    <p>SaaS・人材・製造業など、幅広い業種でご利用いただいています</p>
+    <ul>
+      <li>A社</li><li>B社</li><li>C社</li><li>D社</li><li>E社</li><li>F社</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==========================================================================
+     ② 課題提起
+     【なぜあるか】
+       いきなり売り込まず、まず「あなたのことを分かっています」と示す。
+       ここで「それ、まさにうちだ」と思わせられるかが勝負。
+     【書き方のコツ】
+       自社目線（機能がすごい）ではなく、読者の口から出る言葉で書く。
+     ========================================================================== -->
+<section class="section problem" id="problem">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Problem</span>
+      <h2>リードは増えた。<br><span class="mark">なのに、商談は増えていない。</span></h2>
+      <p>集客に投資してきた会社ほど、この壁にぶつかります。</p>
+    </div>
+
+    <div class="cards cards--3">
+      <div class="card reveal">
+        <h3>リード数は達成、でも繋がらない</h3>
+        <p>マーケは目標を達成しているのに、インサイドセールスは「電話が繋がらない」「話にならない」と疲弊している。部門間で温度差が生まれている。</p>
+      </div>
+      <div class="card reveal">
+        <h3>LPを直せる人が社内にいない</h3>
+        <p>直したい箇所は分かっているのに、マーケは実装できず、開発は機能開発で手一杯。「3ヶ月待ち」が常態化している。</p>
+      </div>
+      <div class="card reveal">
+        <h3>現場の声が、ページに反映されない</h3>
+        <p>営業が掴んだ「刺さる言葉」も「よくある不安」も、担当者の頭の中に溜まるだけ。同じ説明を、毎回電話で繰り返している。</p>
+      </div>
+    </div>
+
+    <!--
+      ========================================================================
+      グラフ①：リード数と商談数の乖離（折れ線・2系列）
+      ------------------------------------------------------------------------
+      【学習ポイント：2軸グラフは絶対に作らない】
+        「リード数(件)」と「商談数(件)」は桁が違います。
+        こういうとき、左右に別々の目盛りを置く"2軸グラフ"を作りがちですが、
+        これはデータ可視化で最もやってはいけない表現です。
+        2つの軸の合わせ方は作り手の任意なので、
+        存在しない相関を勝手に作り出してしまうからです。
+
+        ✅ 正しい解決策：両方を「4月＝100」の指数に直して、1本の軸に乗せる
+        これなら「伸び方の差」だけを正直に比較できます。
+
+      【学習ポイント：数字を全部書かない】
+        6点×2系列＝12個の数字を全部書くと読めなくなります。
+        端の値だけ直接書き、残りは軸とマウスホバーに任せます。
+      ========================================================================
+    -->
+    <div class="chart reveal" style="margin-top:30px">
+      <p class="chart__title">リードは伸び続けている。商談は、横ばいのまま。</p>
+      <p class="chart__sub">4月を100とした指数で比較。※ 学習用のサンプルデータです</p>
+
+      <!-- 凡例：系列が2つ以上あるときは必ず置く（色の識別だけに頼らせない） -->
+      <div class="legend">
+        <span><i style="background:var(--series-1)"></i>リード数</span>
+        <span><i style="background:var(--series-2)"></i>商談数</span>
+      </div>
+
+      <svg viewBox="0 0 640 272" role="img"
+           aria-label="4月を100とした指数の推移。リード数は100から231まで増加する一方、商談数は100から104とほぼ横ばい。">
+        <!-- 目盛り線：実線のヘアライン。点線にすると「予測値」に見えてしまう -->
+        <line class="gridline" x1="44" y1="217.25" x2="600" y2="217.25"/>
+        <line class="gridline" x1="44" y1="159.75" x2="600" y2="159.75"/>
+        <line class="gridline" x1="44" y1="102.25" x2="600" y2="102.25"/>
+        <line class="gridline" x1="44" y1="44.75"  x2="600" y2="44.75"/>
+
+        <!-- y軸の目盛りラベル -->
+        <text class="tick" x="36" y="221" text-anchor="end">100</text>
+        <text class="tick" x="36" y="163" text-anchor="end">140</text>
+        <text class="tick" x="36" y="106" text-anchor="end">180</text>
+        <text class="tick" x="36" y="48"  text-anchor="end">220</text>
+
+        <!-- ホバー時に出る縦の補助線（クロスヘア） -->
+        <line class="crosshair" x1="0" y1="16" x2="0" y2="246"
+              stroke="var(--axis)" stroke-width="1" opacity="0"/>
+
+        <!-- データの線：太さ2px、角と端は丸く -->
+        <path d="M44,217.25 L147.2,177 L250.4,136.75 L353.6,99.4 L456.8,66.3 L560,28.94"
+              fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M44,217.25 L147.2,212.94 L250.4,218.7 L353.6,210.1 L456.8,215.8 L560,211.5"
+              fill="none" stroke="var(--series-2)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+
+        <!-- 端点のマーカー：2pxの「面の色」のリングで囲む（線が重なっても見える） -->
+        <circle cx="44" cy="217.25" r="4.5" fill="var(--series-2)" stroke="var(--viz-face)" stroke-width="2"/>
+        <circle cx="560" cy="211.5" r="4.5" fill="var(--series-2)" stroke="var(--viz-face)" stroke-width="2"/>
+        <circle cx="560" cy="28.94" r="4.5" fill="var(--series-1)" stroke="var(--viz-face)" stroke-width="2"/>
+
+        <!-- 直接ラベル：端の値だけ。文字にはデータの色を使わない -->
+        <text class="val" x="572" y="33">231</text>
+        <text class="val" x="572" y="216">104</text>
+
+        <!-- x軸のラベル -->
+        <text class="tick" x="44"  y="262" text-anchor="middle">4月</text>
+        <text class="tick" x="147" y="262" text-anchor="middle">5月</text>
+        <text class="tick" x="250" y="262" text-anchor="middle">6月</text>
+        <text class="tick" x="354" y="262" text-anchor="middle">7月</text>
+        <text class="tick" x="457" y="262" text-anchor="middle">8月</text>
+        <text class="tick" x="560" y="262" text-anchor="middle">9月</text>
+
+        <!-- マウス判定用の透明な矩形。見た目の点より大きく取るのがコツ -->
+        <g class="hits">
+          <rect class="hit" x="0"     y="16" width="95.6"  height="230" data-cx="44"    data-m="4月" data-a="100" data-b="100"/>
+          <rect class="hit" x="95.6"  y="16" width="103.2" height="230" data-cx="147.2" data-m="5月" data-a="128" data-b="103"/>
+          <rect class="hit" x="198.8" y="16" width="103.2" height="230" data-cx="250.4" data-m="6月" data-a="156" data-b="99"/>
+          <rect class="hit" x="302"   y="16" width="103.2" height="230" data-cx="353.6" data-m="7月" data-a="182" data-b="105"/>
+          <rect class="hit" x="405.2" y="16" width="103.2" height="230" data-cx="456.8" data-m="8月" data-a="205" data-b="101"/>
+          <rect class="hit" x="508.4" y="16" width="103.2" height="230" data-cx="560"   data-m="9月" data-a="231" data-b="104"/>
+        </g>
+      </svg>
+
+      <!-- 表ビュー：グラフが読めない人・読めない環境のための代替表現 -->
+      <details class="table-view">
+        <summary>数値を表で見る</summary>
+        <table>
+          <thead><tr><th>月</th><th>リード数（指数）</th><th>商談数（指数）</th></tr></thead>
+          <tbody>
+            <tr><td>4月</td><td>100</td><td>100</td></tr>
+            <tr><td>5月</td><td>128</td><td>103</td></tr>
+            <tr><td>6月</td><td>156</td><td>99</td></tr>
+            <tr><td>7月</td><td>182</td><td>105</td></tr>
+            <tr><td>8月</td><td>205</td><td>101</td></tr>
+            <tr><td>9月</td><td>231</td><td>104</td></tr>
+          </tbody>
+        </table>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     ③ 解決策・できること（特長）
+     【なぜあるか】課題に共感させた直後に、解決策を示す。順番が逆だと響かない。
+     【書き方のコツ】
+       ✕ 機能を書く：「A/Bテスト機能を提供します」
+       ⭕ 変化を書く：「同じ広告費のまま、商談が1.7倍になります」
+     ========================================================================== -->
+<section class="section section--subtle" id="feature">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Solution</span>
+      <h2>集客ではなく、<br>「その先」だけを改善します。</h2>
+      <p>広告費もSEO予算も増やしません。今ある流入の通り道だけを作り直します。</p>
+    </div>
+
+    <!-- 特長1：絞るLPという考え方（今回の学習の核） -->
+    <div class="feature reveal">
+      <div>
+        <p class="feature__num">SOLUTION 01</p>
+        <h3>「集める」LPから、「絞る」LPへ</h3>
+        <p>誰でも登録できるフォームは、リード数を増やす代わりに営業の工数を食い潰します。登録前に数問だけ聞くことで、確度の高い相手だけを営業に渡します。</p>
+        <ul class="checks">
+          <li>登録フォームに3問だけ選別質問を追加</li>
+          <li>回答内容から自動でA/B/Cランクに仕分け</li>
+          <li>Cランクは営業に渡さず、メールで自動育成</li>
+        </ul>
+      </div>
+      <!--
+        ======================================================================
+        グラフ②：改善前後の比較（横棒・小分割グラフ）
+        ----------------------------------------------------------------------
+        【学習ポイント：色は「1色の濃淡」で足りる】
+          改善前と改善後は"別のもの"ではなく"同じものの2時点"です。
+          こういうときは違う色を2つ使うのではなく、同じ色の薄い／濃いで表します。
+          色数は少ないほど読みやすくなります。
+
+        【学習ポイント：スケールが違うなら、正直に書く】
+          リード数(1,000件)と商談数(30件)を同じ目盛りに並べると、
+          商談数の棒がほぼ見えなくなります。
+          そこで項目ごとに独立したグラフに分けています（小分割グラフ）。
+          ただし目盛りが違うことは必ず注記する。黙って分けると誤解を生みます。
+        ======================================================================
+      -->
+      <div class="feature__media">
+        <div class="legend" style="margin-bottom:6px">
+          <span><i style="background:var(--ramp-2)"></i>改善前</span>
+          <span><i style="background:var(--ramp-4)"></i>改善後</span>
+        </div>
+
+        <div class="dumbbells">
+          <div class="db">
+            <h5>リード数</h5>
+            <svg viewBox="0 0 170 58" role="img" aria-label="リード数は1,000件から950件へ、5パーセント減少">
+              <rect x="0" y="8"  width="91.3" height="12" rx="4" fill="var(--ramp-2)"/>
+              <rect x="0" y="26" width="86.7" height="12" rx="4" fill="var(--ramp-4)"/>
+              <text class="val" x="96.3" y="18">1,000</text>
+              <text class="val" x="91.7" y="36">950</text>
+              <text class="lbl" x="0" y="54">ほぼ変わらない</text>
+            </svg>
+          </div>
+
+          <div class="db">
+            <h5>架電対象</h5>
+            <svg viewBox="0 0 170 58" role="img" aria-label="架電対象は1,000件から290件へ、71パーセント減少">
+              <rect x="0" y="8"  width="91.3" height="12" rx="4" fill="var(--ramp-2)"/>
+              <rect x="0" y="26" width="26.5" height="12" rx="4" fill="var(--ramp-4)"/>
+              <text class="val" x="96.3" y="18">1,000</text>
+              <text class="val" x="31.5" y="36">290</text>
+              <text class="lbl" x="0" y="54">▼ 71% 営業の負担</text>
+            </svg>
+          </div>
+
+          <div class="db">
+            <h5>商談数</h5>
+            <svg viewBox="0 0 170 58" role="img" aria-label="商談数は30件から96件へ、3.2倍に増加">
+              <rect x="0" y="8"  width="28.6" height="12" rx="4" fill="var(--ramp-2)"/>
+              <rect x="0" y="26" width="91.6" height="12" rx="4" fill="var(--ramp-4)"/>
+              <text class="val" x="33.6" y="18">30</text>
+              <text class="val" x="96.6" y="36">96</text>
+              <text class="lbl" x="0" y="54">▲ 3.2倍 成果</text>
+            </svg>
+          </div>
+        </div>
+
+        <p style="font-size:.72rem; color:var(--ink-faint); margin-top:12px; line-height:1.6">
+          ※ 3つのグラフはそれぞれ独立した目盛りです（棒の長さを他の項目と比べないでください）。数値は学習用のサンプルです。
+        </p>
+      </div>
+    </div>
+
+    <!-- 特長2：フィードバックループ -->
+    <div class="feature reveal">
+      <div>
+        <p class="feature__num">SOLUTION 02</p>
+        <h3>営業の「刺さった言葉」を、ページに戻す</h3>
+        <p>商談で実際に効いた表現、繰り返し出る不安、断られる理由。それらを毎月ヒアリングし、LPのコピーとFAQに反映します。電話で説明していたことを、ページが代わりに話すようになります。</p>
+        <ul class="checks">
+          <li>月1回、営業チームへのヒアリングを実施</li>
+          <li>刺さった表現をコピーとFAQに反映</li>
+          <li>反映後の商談化率を追跡し、効果を検証</li>
+        </ul>
+      </div>
+      <div class="feature__media" aria-hidden="true">
+        <div class="kpi"><span>STEP 1</span><strong style="font-size:.95rem">営業が顧客の生の声を記録</strong></div>
+        <div class="kpi"><span>STEP 2</span><strong style="font-size:.95rem">刺さった表現を抽出</strong></div>
+        <div class="kpi"><span>STEP 3</span><strong style="font-size:.95rem">LPのコピーに反映（48時間以内）</strong></div>
+        <div class="kpi"><span>STEP 4</span><strong style="font-size:.95rem">商談化率の変化を計測</strong></div>
+      </div>
+    </div>
+
+    <!-- 特長3：実装体制 -->
+    <div class="feature reveal">
+      <div>
+        <p class="feature__num">SOLUTION 03</p>
+        <h3>「直したい」を、48時間で反映する</h3>
+        <p>改善案を出すだけのコンサルではありません。実装まで行います。さらに、文言の変更は貴社の担当者が管理画面から直接できる状態でお渡しします。</p>
+        <ul class="checks">
+          <li>改善提案から実装までワンストップ</li>
+          <li>文言はノーコードで自社編集できる形に</li>
+          <li>開発チームへの依頼を待つ必要がなくなる</li>
+        </ul>
+      </div>
+      <div class="feature__media" aria-hidden="true">
+        <div class="compare">
+          <div class="before">
+            <h4>一般的な体制</h4>
+            <dl>
+              <div class="r"><span>反映まで</span><b>約3ヶ月</b></div>
+              <div class="r"><span>依頼先</span><b>開発部</b></div>
+            </dl>
+          </div>
+          <div class="after">
+            <h4>Funnel導入後</h4>
+            <dl>
+              <div class="r"><span>反映まで</span><b>48時間</b></div>
+              <div class="r"><span>依頼先</span><b>自社で可</b></div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--
+      ========================================================================
+      グラフ③：投資してから回収するまでの時間差（折れ線・2系列）
+      ------------------------------------------------------------------------
+      【学習ポイント：ROIは「期間」を決めないと計算できない】
+        ROI（Return On Investment＝投資利益率）は
+            利益 ÷ 投資額 × 100
+        で計算しますが、いつ時点で切るかで答えが正反対になります。
+        SEOは3ヶ月時点なら大赤字、12ヶ月時点なら黒字。
+        「SEOのROIは？」と聞かれたら「何ヶ月時点で？」と聞き返すのが正解です。
+
+      【学習ポイント：0のラインを強調する】
+        プラスとマイナスが混ざるグラフでは、
+        0（損益分岐点）の線だけ他の目盛りより濃くします。
+        読み手が最初に探すのがこの線だからです。
+      ========================================================================
+    -->
+    <div class="chart reveal" style="margin-top:36px">
+      <p class="chart__title">なぜ「集客」より先に「LP」なのか</p>
+      <p class="chart__sub">投資してから累積利益がプラスに転じるまでの時間。※ 傾向を示すための概念図です</p>
+
+      <div class="legend">
+        <span><i style="background:var(--series-1)"></i>LP改善への投資</span>
+        <span><i style="background:var(--series-2)"></i>SEOへの投資</span>
+      </div>
+
+      <svg viewBox="0 0 640 280" role="img"
+           aria-label="LP改善は2ヶ月目で黒字化し以降ゆるやかに伸びる。SEOは6ヶ月目まで赤字が続くが、その後急激に伸び、12ヶ月目にはLP改善を上回る。">
+        <line class="gridline" x1="48" y1="240" x2="600" y2="240"/>
+        <line class="gridline" x1="48" y1="130" x2="600" y2="130"/>
+        <line class="gridline" x1="48" y1="75"  x2="600" y2="75"/>
+        <line class="gridline" x1="48" y1="20"  x2="600" y2="20"/>
+        <!-- 0＝損益分岐点。ここだけ濃くする -->
+        <line class="axisline" x1="48" y1="185" x2="600" y2="185"/>
+
+        <text class="tick" x="40" y="244" text-anchor="end">-100</text>
+        <text class="tick" x="40" y="189" text-anchor="end">0</text>
+        <text class="tick" x="40" y="134" text-anchor="end">+100</text>
+        <text class="tick" x="40" y="79"  text-anchor="end">+200</text>
+        <text class="tick" x="40" y="24"  text-anchor="end">+300</text>
+        <text class="lbl"  x="52" y="180">損益分岐</text>
+
+        <line class="crosshair" x1="0" y1="16" x2="0" y2="250"
+              stroke="var(--axis)" stroke-width="1" opacity="0"/>
+
+        <!-- SEO：最初は大きく沈み、後半で伸びる -->
+        <path d="M48,201.5 L95.45,215.25 L142.9,223.5 L190.35,226.25 L237.8,218 L285.25,204.25 L332.7,185 L380.15,160.25 L427.6,132.75 L475.05,102.5 L522.5,69.5 L570,33.75"
+              fill="none" stroke="var(--series-2)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+        <!-- LP改善：すぐ黒字化し、安定して伸びる -->
+        <path d="M48,189.4 L95.45,179.5 L142.9,167.4 L190.35,154.75 L237.8,142.1 L285.25,130 L332.7,117.9 L380.15,105.8 L427.6,93.7 L475.05,81.6 L522.5,69.5 L570,57.4"
+              fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+
+        <circle cx="570" cy="33.75" r="4.5" fill="var(--series-2)" stroke="var(--viz-face)" stroke-width="2"/>
+        <circle cx="570" cy="57.4"  r="4.5" fill="var(--series-1)" stroke="var(--viz-face)" stroke-width="2"/>
+
+        <text class="val" x="582" y="38">+275</text>
+        <text class="val" x="582" y="62">+232</text>
+
+        <text class="tick" x="48"  y="266" text-anchor="middle">1ヶ月</text>
+        <text class="tick" x="143" y="266" text-anchor="middle">3ヶ月</text>
+        <text class="tick" x="285" y="266" text-anchor="middle">6ヶ月</text>
+        <text class="tick" x="428" y="266" text-anchor="middle">9ヶ月</text>
+        <text class="tick" x="570" y="266" text-anchor="middle">12ヶ月</text>
+
+        <g class="hits">
+          <rect class="hit" x="24"    y="16" width="47.45" height="234" data-cx="48"     data-m="1ヶ月目"  data-a="-8"  data-b="-30"/>
+          <rect class="hit" x="71.7"  y="16" width="47.45" height="234" data-cx="95.45"  data-m="2ヶ月目"  data-a="10"  data-b="-55"/>
+          <rect class="hit" x="119.2" y="16" width="47.45" height="234" data-cx="142.9"  data-m="3ヶ月目"  data-a="32"  data-b="-70"/>
+          <rect class="hit" x="166.6" y="16" width="47.45" height="234" data-cx="190.35" data-m="4ヶ月目"  data-a="55"  data-b="-75"/>
+          <rect class="hit" x="214.1" y="16" width="47.45" height="234" data-cx="237.8"  data-m="5ヶ月目"  data-a="78"  data-b="-60"/>
+          <rect class="hit" x="261.5" y="16" width="47.45" height="234" data-cx="285.25" data-m="6ヶ月目"  data-a="100" data-b="-35"/>
+          <rect class="hit" x="309"   y="16" width="47.45" height="234" data-cx="332.7"  data-m="7ヶ月目"  data-a="122" data-b="0"/>
+          <rect class="hit" x="356.4" y="16" width="47.45" height="234" data-cx="380.15" data-m="8ヶ月目"  data-a="144" data-b="45"/>
+          <rect class="hit" x="403.9" y="16" width="47.45" height="234" data-cx="427.6"  data-m="9ヶ月目"  data-a="166" data-b="95"/>
+          <rect class="hit" x="451.3" y="16" width="47.45" height="234" data-cx="475.05" data-m="10ヶ月目" data-a="188" data-b="150"/>
+          <rect class="hit" x="498.8" y="16" width="47.45" height="234" data-cx="522.5"  data-m="11ヶ月目" data-a="210" data-b="210"/>
+          <rect class="hit" x="546.2" y="16" width="53"    height="234" data-cx="570"    data-m="12ヶ月目" data-a="232" data-b="275"/>
+        </g>
+      </svg>
+
+      <p style="font-size:.78rem; color:var(--ink-muted); margin-top:14px; line-height:1.8">
+        LP改善は<b>2ヶ月目</b>に黒字化します。SEOが黒字化するのは<b>7ヶ月目</b>。
+        ただし12ヶ月を超えるとSEOが逆転します。<b>どちらが優れているかではなく、いつ成果が必要かで選ぶ</b>——これがROIを期間で見るということです。
+      </p>
+
+      <details class="table-view">
+        <summary>数値を表で見る</summary>
+        <table>
+          <thead><tr><th>経過</th><th>LP改善（累積）</th><th>SEO（累積）</th></tr></thead>
+          <tbody>
+            <tr><td>1ヶ月目</td><td>-8</td><td>-30</td></tr>
+            <tr><td>2ヶ月目</td><td>10</td><td>-55</td></tr>
+            <tr><td>3ヶ月目</td><td>32</td><td>-70</td></tr>
+            <tr><td>4ヶ月目</td><td>55</td><td>-75</td></tr>
+            <tr><td>5ヶ月目</td><td>78</td><td>-60</td></tr>
+            <tr><td>6ヶ月目</td><td>100</td><td>-35</td></tr>
+            <tr><td>7ヶ月目</td><td>122</td><td>0</td></tr>
+            <tr><td>8ヶ月目</td><td>144</td><td>45</td></tr>
+            <tr><td>9ヶ月目</td><td>166</td><td>95</td></tr>
+            <tr><td>10ヶ月目</td><td>188</td><td>150</td></tr>
+            <tr><td>11ヶ月目</td><td>210</td><td>210</td></tr>
+            <tr><td>12ヶ月目</td><td>232</td><td>275</td></tr>
+          </tbody>
+        </table>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     ④ 数値実績
+     【なぜあるか】抽象的な良さより、数字1つのほうが信じられる。
+     【実運用の注意】★最重要★
+       根拠のない数字を載せると景品表示法違反になり得ます。
+       必ず実測値のみを、算出条件つきで掲載してください。
+     ========================================================================== -->
+<section class="section">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Results</span>
+      <h2>導入企業の平均的な変化</h2>
+      <p>※ 以下の数値はすべて学習用のサンプルです。実在の実績ではありません。</p>
+    </div>
+    <div class="stats reveal">
+      <div><strong>3.2<small>倍</small></strong><span>商談化率の改善</span></div>
+      <div><strong>71<small>%</small></strong><span>インサイドセールスの架電削減</span></div>
+      <div><strong>48<small>時間</small></strong><span>改善反映までの平均時間</span></div>
+      <div><strong>0<small>円</small></strong><span>追加の広告費</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     ⑤ 進め方
+     【なぜあるか】「面倒くさそう」「時間がかかりそう」という不安を消す。
+     ステップは3つが基本。5つ以上は逆効果（大変そうに見える）。
+     ========================================================================== -->
+<section class="section section--subtle" id="flow">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Flow</span>
+      <h2>最短3週間で、数字が動き始めます</h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step__num">1</div>
+        <h3>無料診断</h3>
+        <p>現在のLPとフォームを拝見し、離脱の原因と改善余地をレポートにしてお渡しします。</p>
+        <span class="step__term">所要3分・費用0円</span>
+      </div>
+      <div class="step reveal">
+        <div class="step__num">2</div>
+        <h3>設計・実装</h3>
+        <p>営業チームへのヒアリングを行い、コピー・フォーム・導線を設計し直して実装します。</p>
+        <span class="step__term">2〜3週間</span>
+      </div>
+      <div class="step reveal">
+        <div class="step__num">3</div>
+        <h3>計測・改善</h3>
+        <p>商談化率まで追跡し、毎月改善を回します。文言変更は貴社側でも可能な状態でお渡しします。</p>
+        <span class="step__term">継続支援</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     ⑥ 導入事例
+     【なぜあるか】自社が言う「すごい」より、第三者が言う「良かった」のほうが強い。
+     【実運用の注意】掲載許諾が必須。許諾前は業種・規模のみの匿名表記にする。
+     ========================================================================== -->
+<section class="section" id="case">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Case Study</span>
+      <h2>導入事例</h2>
+      <p>※ 以下は学習用に作成した架空の事例です。</p>
+    </div>
+    <div class="cards cards--2">
+      <div class="case reveal">
+        <p class="case__quote">「リード数が減ったのに商談は3倍になりました。“数を減らす”という提案は社内で相当揉めましたが、結果が全てでした。」</p>
+        <div class="case__result">
+          <div><span>商談数</span><strong>3.1倍</strong></div>
+          <div><span>架電工数</span><strong>▲68%</strong></div>
+        </div>
+        <div class="case__who">
+          <div class="avatar">A</div>
+          <p><b>A社（SaaS・従業員120名）</b>マーケティング部 部長</p>
+        </div>
+      </div>
+      <div class="case reveal">
+        <p class="case__quote">「営業が電話で毎回説明していた内容をLPに書いただけで、商談の温度が変わりました。もっと早くやるべきでした。」</p>
+        <div class="case__result">
+          <div><span>商談化率</span><strong>11%→29%</strong></div>
+          <div><span>着手期間</span><strong>3週間</strong></div>
+        </div>
+        <div class="case__who">
+          <div class="avatar">B</div>
+          <p><b>B社（人材サービス・従業員60名）</b>インサイドセールス マネージャー</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     ⑦ 料金
+     【なぜあるか】隠すと不信感になる。ただし「あえて隠す」戦略もある。
+     【重要な分岐】
+       ・料金を出す  → 検討しやすい。問い合わせは増えるが、冷やかしも増える
+       ・料金を隠す  → 問い合わせは減るが、確度が上がる（＝絞る装置になる）
+       Sansanのようなエンタープライズ向けSaaSは後者を選んでいます。
+     ========================================================================== -->
+<section class="section section--subtle" id="price">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Pricing</span>
+      <h2>料金プラン</h2>
+      <p>※ 架空の金額です。表示はすべて税抜。</p>
+    </div>
+    <div class="plans">
+      <div class="plan reveal">
+        <h3>診断のみ</h3>
+        <div class="plan__price"><strong>¥0</strong></div>
+        <p class="plan__desc">まず現状を把握したい方へ</p>
+        <ul>
+          <li>LP・フォームの診断</li>
+          <li>改善ポイントのレポート</li>
+          <li>オンライン報告会（30分）</li>
+        </ul>
+        <a class="btn btn--ghost btn--block" href="#contact">無料で申し込む</a>
+      </div>
+      <div class="plan plan--featured reveal">
+        <h3>改善プラン</h3>
+        <div class="plan__price"><strong>¥380,000</strong><span>/ 月</span></div>
+        <p class="plan__desc">実装まで任せたい方へ</p>
+        <ul>
+          <li>診断プランの内容すべて</li>
+          <li>LP・フォームの設計と実装</li>
+          <li>営業チームへの月次ヒアリング</li>
+          <li>商談化率までの計測レポート</li>
+          <li>ノーコード編集環境の提供</li>
+        </ul>
+        <a class="btn btn--primary btn--block" href="#contact">相談する</a>
+      </div>
+      <div class="plan reveal">
+        <h3>伴走プラン</h3>
+        <div class="plan__price"><strong>個別見積</strong></div>
+        <p class="plan__desc">組織づくりから変えたい方へ</p>
+        <ul>
+          <li>改善プランの内容すべて</li>
+          <li>KPI設計の再設計支援</li>
+          <li>グロースチーム組成の支援</li>
+          <li>社内勉強会の実施</li>
+        </ul>
+        <a class="btn btn--ghost btn--block" href="#contact">見積もりを依頼</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     ⑧ FAQ
+     【なぜあるか】申し込む直前の「最後の不安」を消す。
+     【作り方】想像で書かない。営業が実際に聞かれた質問をそのまま並べる。
+     【SEOポイント⑤】
+       FAQは検索でも拾われやすいブロック。構造化データ（FAQ Schema）を
+       追加すると、検索結果に質問が展開表示されることがあります。
+     ========================================================================== -->
+<section class="section" id="faq">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">FAQ</span>
+      <h2>よくあるご質問</h2>
+    </div>
+    <div class="faq reveal">
+      <details open>
+        <summary>リード数が減ると、マーケの評価が下がってしまいます。</summary>
+        <p>最も多いご相談です。導入時にKPIの再設計もあわせてご提案しています。「リード数」から「商談化したリード数」へ指標を移すことで、両部門の利害を揃えるのが基本方針です。</p>
+      </details>
+      <details>
+        <summary>広告費やSEO予算を増やす必要はありますか？</summary>
+        <p>ありません。Funnelは既存の流入の転換率だけを改善するサービスです。むしろ流入への投資効率が上がるため、同じ予算での成果が増えます。</p>
+      </details>
+      <details>
+        <summary>社内にエンジニアがいなくても導入できますか？</summary>
+        <p>可能です。実装は当社で行い、納品後は文言の変更を管理画面から行える状態でお渡しします。開発チームへの依頼は不要になります。</p>
+      </details>
+      <details>
+        <summary>効果が出るまでどのくらいかかりますか？</summary>
+        <p>実装完了から2〜4週間で数字が動き始めるケースが多いです。ただし商談化率まで正確に評価するには、母数の関係で2〜3ヶ月を見ていただくのが確実です。</p>
+      </details>
+      <details>
+        <summary>診断だけ受けることもできますか？</summary>
+        <p>もちろん可能です。診断は無料で、その後の契約義務は一切ありません。レポートは社内資料としてそのままお使いいただけます。</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     ⑨ 最終CTA＋フォーム
+     【なぜあるか】ここがゴール。ここまで読んだ人は最も温まっている。
+     【★このLPの最大の見どころ★】
+       このフォームは「絞る装置」として設計されています。
+       ・月間流入数、体制、役割 の3問で相手をランク分けできる
+       ・入力項目が多いほど登録率は下がるが、確度は上がる
+       ・試しに下の3つの<select>を削除してみてください。
+         それだけで「集めるLP」に変わります。この差を体感するのが今日の課題です。
+     ========================================================================== -->
+<section class="section cta" id="contact">
+  <div class="wrap cta__grid">
+    <div>
+      <span class="eyebrow" style="color:#8aa0ff">Contact</span>
+      <h2>まずは、今のLPを<br>診断させてください。</h2>
+      <p>現在のLPとフォームを拝見し、どこで何人が離脱しているか、改善余地がどれだけあるかをレポートにしてお渡しします。費用はかかりません。</p>
+      <ul class="checks">
+        <li>所要3分・費用0円</li>
+        <li>診断レポートは社内資料として利用可</li>
+        <li>その後の契約義務は一切ありません</li>
+      </ul>
+    </div>
+
+    <!--
+      action属性：実運用では送信先URLを指定します（フォームサービス等）。
+      今回は学習用なので、JavaScriptで完了メッセージを出すだけにしています。
+    -->
+    <form class="form" id="contactForm" novalidate>
+      <h3>無料LP診断のお申し込み</h3>
+      <p class="form__note">1営業日以内にご連絡します。</p>
+
+      <div class="field">
+        <label for="company">会社名<i>必須</i></label>
+        <input type="text" id="company" name="company" required autocomplete="organization" placeholder="株式会社サンプル">
+      </div>
+      <div class="field">
+        <label for="name">お名前<i>必須</i></label>
+        <input type="text" id="name" name="name" required autocomplete="name" placeholder="山田 太郎">
+      </div>
+      <div class="field">
+        <label for="email">メールアドレス<i>必須</i></label>
+        <input type="email" id="email" name="email" required autocomplete="email" placeholder="taro@example.com">
+      </div>
+
+      <!-- ▼ ここから3問が「絞る」ための質問 ▼ -->
+      <div class="field">
+        <label for="traffic">サイトの月間訪問数<i>必須</i></label>
+        <select id="traffic" name="traffic" required>
+          <option value="">選択してください</option>
+          <option>1,000未満</option>
+          <option>1,000〜10,000</option>
+          <option>10,000〜50,000</option>
+          <option>50,000以上</option>
+          <option>把握していない</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="team">インサイドセールス体制<i>必須</i></label>
+        <select id="team" name="team" required>
+          <option value="">選択してください</option>
+          <option>専任チームがある</option>
+          <option>営業が兼任している</option>
+          <option>いない</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="role">ご担当<i>必須</i></label>
+        <select id="role" name="role" required>
+          <option value="">選択してください</option>
+          <option>決裁者（役員・部長クラス）</option>
+          <option>担当者（推進役）</option>
+          <option>情報収集のみ</option>
+        </select>
+      </div>
+      <!-- ▲ ここまでが「絞る」ための質問 ▲ -->
+
+      <div class="field">
+        <label for="message">ご質問・ご要望（任意）</label>
+        <textarea id="message" name="message" placeholder="現在のお困りごとをご記入ください。"></textarea>
+      </div>
+
+      <button type="submit" class="btn btn--primary btn--block btn--lg">無料診断を申し込む</button>
+      <p class="form__privacy">送信により<a href="#">プライバシーポリシー</a>に同意したものとみなします。</p>
+      <p class="form__done" id="formDone">送信ありがとうございました。担当者よりご連絡いたします。</p>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<!-- ==========================================================================
+     フッター
+     【なぜあるか】会社情報・規約へのリンクは、信頼性の担保として必要。
+     特にBtoBでは「実在する会社か」を確認されるため、会社概要は必須。
+     ========================================================================== -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div>
+        <a class="logo" href="#top"><span class="logo__mark">F</span>Funnel</a>
+        <p>BtoB SaaSのCVR改善に特化した、LP・フォーム最適化サービス。</p>
+      </div>
+      <div>
+        <h4>サービス</h4>
+        <ul>
+          <li><a href="#feature">できること</a></li>
+          <li><a href="#price">料金</a></li>
+          <li><a href="#case">事例</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>会社情報</h4>
+        <ul>
+          <li><a href="#">会社概要</a></li>
+          <li><a href="#">採用情報</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>サポート</h4>
+        <ul>
+          <li><a href="#contact">お問い合わせ</a></li>
+          <li><a href="#">利用規約</a></li>
+          <li><a href="#">プライバシーポリシー</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>&copy; 2026 Funnel（学習用サンプル）</span>
+      <span>本ページは学習教材です。掲載内容はすべて架空のものです。</span>
+    </div>
+  </div>
+</footer>
+
+<!-- 追従CTA：スマホでのみ表示。スクロール中もいつでも申し込める -->
+<div class="sticky-cta" id="stickyCta">
+  <a class="btn btn--ghost" href="#price">料金を見る</a>
+  <a class="btn btn--primary" href="#contact">無料診断</a>
+</div>
+
+<script>
+/* ==========================================================================
+   JavaScript：ページに「動き」をつける部分
+   HTMLが骨格、CSSが見た目、JavaScriptが動き、という役割分担です。
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  /* --- ヘッダーの影と、スマホ追従CTAの出し入れ --- */
+  var header = document.getElementById('header');
+  var sticky = document.getElementById('stickyCta');
+  var ticking = false;
+
+  function onScroll() {
+    var y = window.scrollY;
+    header.classList.toggle('is-scrolled', y > 8);
+    // 画面の6割スクロールしたら、追従CTAを出す
+    sticky.classList.toggle('is-visible', y > window.innerHeight * 0.6);
+    ticking = false;
+  }
+  window.addEventListener('scroll', function () {
+    if (!ticking) { window.requestAnimationFrame(onScroll); ticking = true; }
+  }, { passive: true });
+  onScroll();
+
+  /* --- スマホのハンバーガーメニュー --- */
+  var burger = document.getElementById('burger');
+  var nav = document.getElementById('nav');
+
+  function closeNav() {
+    nav.classList.remove('is-open');
+    burger.setAttribute('aria-expanded', 'false');
+  }
+  burger.addEventListener('click', function () {
+    var open = nav.classList.toggle('is-open');
+    burger.setAttribute('aria-expanded', String(open));
+  });
+  nav.addEventListener('click', function (e) { if (e.target.closest('a')) closeNav(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeNav(); });
+
+  /* --- スクロールに合わせて要素をふわっと表示 --- */
+  var targets = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-in');
+        io.unobserve(entry.target);
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    targets.forEach(function (el) { io.observe(el); });
+  } else {
+    targets.forEach(function (el) { el.classList.add('is-in'); });
+  }
+
+  /* --- FAQ：ひとつ開いたら他は閉じる --- */
+  var faqItems = document.querySelectorAll('.faq details');
+  faqItems.forEach(function (item) {
+    item.addEventListener('toggle', function () {
+      if (!item.open) return;
+      faqItems.forEach(function (other) { if (other !== item) other.open = false; });
+    });
+  });
+
+  /* --- グラフのツールチップとクロスヘア ---------------------------------
+     グラフは「マウスを乗せたら値が出る」のが基本です。
+     ただしツールチップ"だけ"が値を知る手段になってはいけません
+     （スマホでは乗せられない／読み上げソフトでは読めないため）。
+     このページでは、端の値の直接表示・表ビュー・キーボード操作の
+     3つを併用しています。                                            */
+  var tip = document.createElement('div');
+  tip.className = 'viz-tip';
+  document.body.appendChild(tip);
+
+  document.querySelectorAll('.chart svg').forEach(function (svg) {
+    var hits = svg.querySelectorAll('.hit');
+    if (!hits.length) return;
+
+    var cross = svg.querySelector('.crosshair');
+    var keys = svg.closest('.chart').querySelectorAll('.legend span');
+    var nameA = keys[0] ? keys[0].textContent.trim() : '系列1';
+    var nameB = keys[1] ? keys[1].textContent.trim() : '系列2';
+
+    function place(x, y) {
+      // 画面の右端・上端からはみ出さないように位置を補正する
+      var left = Math.min(x + 14, window.innerWidth - tip.offsetWidth - 12);
+      var top = y - tip.offsetHeight - 14;
+      tip.style.left = Math.max(8, left) + 'px';
+      tip.style.top = Math.max(8, top) + 'px';
+    }
+
+    function show(hit, x, y) {
+      tip.innerHTML = '<b>' + hit.getAttribute('data-m') + '</b><br>'
+        + nameA + '：' + hit.getAttribute('data-a') + '<br>'
+        + nameB + '：' + hit.getAttribute('data-b');
+      tip.classList.add('is-on');
+      place(x, y);
+      if (cross) {
+        cross.setAttribute('x1', hit.getAttribute('data-cx'));
+        cross.setAttribute('x2', hit.getAttribute('data-cx'));
+        cross.setAttribute('opacity', '1');
+      }
+    }
+
+    function hide() {
+      tip.classList.remove('is-on');
+      if (cross) cross.setAttribute('opacity', '0');
+    }
+
+    hits.forEach(function (hit) {
+      hit.setAttribute('tabindex', '0');   // キーボードのTabでも辿れるようにする
+      hit.addEventListener('mouseenter', function (e) { show(hit, e.clientX, e.clientY); });
+      hit.addEventListener('mousemove', function (e) { place(e.clientX, e.clientY); });
+      hit.addEventListener('mouseleave', hide);
+      hit.addEventListener('focus', function () {
+        var r = hit.getBoundingClientRect();
+        show(hit, r.left + r.width / 2, r.top + r.height / 2);
+      });
+      hit.addEventListener('blur', hide);
+    });
+  });
+
+  /* --- フォーム送信（学習用のデモ動作） ---
+     実運用では、ここでフォームサービスへ送信する処理を書きます。
+     今は「完了メッセージを出すだけ」です。                          */
+  var form = document.getElementById('contactForm');
+  var done = document.getElementById('formDone');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!form.reportValidity()) return;
+    done.style.display = 'block';
+    form.querySelector('button[type="submit"]').disabled = true;
+  });
+})();
+</script>
+</body>
+</html>
